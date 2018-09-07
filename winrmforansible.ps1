@@ -30,3 +30,6 @@ cmd /c $mycommand
 
 # Remove the initial HTTP listener
 Get-ChildItem -Path WSMan:\localhost\Listener | Where-Object { $_.Keys -contains "Transport=HTTP" } | Remove-Item -Recurse -Force
+
+# remove its firewall rule
+Remove-NetFirewallRule -DisplayName "Windows Remote Management (HTTP-In)"
