@@ -17,8 +17,6 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 #
-# allow TCP port 5986 thru firewall.
-New-NetFirewallRule -DisplayName 'WinRM HTTPS' -Profile @('Domain', 'Private') -Direction Inbound -Action Allow -Protocol TCP -LocalPort @('5986')
 # do initial winrm quickconfig (HTTP only)
 winrm quickconfig -quiet
 
@@ -33,3 +31,6 @@ Get-ChildItem -Path WSMan:\localhost\Listener | Where-Object { $_.Keys -contains
 
 # remove its firewall rule
 Remove-NetFirewallRule -DisplayName "Windows Remote Management (HTTP-In)"
+
+# allow TCP port 5986 thru firewall.
+New-NetFirewallRule -DisplayName 'WinRM HTTPS' -Profile @('Domain', 'Private') -Direction Inbound -Action Allow -Protocol TCP -LocalPort @('5986')
