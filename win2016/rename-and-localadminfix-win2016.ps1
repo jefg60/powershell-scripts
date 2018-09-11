@@ -2,8 +2,8 @@
 # $newComputerName = 'newname'
 # $newNVDomain = 'lan'
 
-if ( ($newComputerName -eq $null) -or ($newNVDomain -eq $null) {
-	write-host "Please read script comments and set variables in it first!"
+if ( ($newComputerName -eq $null) -or ($newNVDomain -eq $null) ){
+	read-host -Prompt "Please read script comments and set variables in it first!"
 	exit
 }
 
