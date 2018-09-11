@@ -1,5 +1,6 @@
 # Script to configure winrm with self-signed HTTPS certificate.
 # Useful for configuring windows with ansible.
+# Tested on a non-domain windows 2016 box
 # May not work on a partially configured machine. USE WITH CAUTION.
 #
 # Copyright (C) 2018 Jeff Hibberd
