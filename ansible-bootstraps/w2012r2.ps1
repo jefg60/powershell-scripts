@@ -16,6 +16,18 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
+#check windows version
+$desiredbuild = 9600
+$detectedbuild = [System.Environment]::OSVersion.Version.Build
+if ($detectedbuild -ne $desiredbuild) {
+        write-host "This script is for windows build "$desiredbuild
+        write-host "It appears to be running on build "$detectedbuild
+        write-host "Please try a different script"
+        Read-Host -Prompt "Press Enter to exit or ctrl-C to return to the shell"
+        Exit
+} Else {
+Write-host "Build version seems to be in order, here goes..."
+}
 ## rename and set fqdn
 Rename-Computer -NewName "w2012r2"
 Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters -Name "NV Domain" -Value "lan"
