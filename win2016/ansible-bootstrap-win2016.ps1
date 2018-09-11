@@ -18,6 +18,8 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+$ErrorActionPreference = "Stop"
+
 # windows Build version the script was written for
 $desiredBuild = 14393
 
@@ -52,8 +54,18 @@ if (Test-Path $logFile) {
 	New-Item $logFile -Itemtype file -Force
 }
 
-#ansible user - remove first 
-remove-localuser -Name $ansibleUserName
+#Check that we can adminster winrm (permissions may be wrong)
+try {
+  winrm enumerate winrm/config/Listener
+  "I can enumerate winrm OK" | Out-File $logFile -Append
+}
+Catch {
+  Read-Host -Prompt "Error: Can't enumerate winrm properly. check the rename script for clues"
+  Exit
+}
+
+#ansible user - remove first (silently continue if not there)
+remove-localuser -Name $ansibleUserName -ErrorAction SilentlyContinue
 try {
   $password = Read-Host -AsSecureString -Prompt "ansible user password:"
   New-localuser -Name $ansibleUserName -Password $password -ErrorAction Stop
