@@ -53,7 +53,7 @@ if (Test-Path $logFile) {
 }
 
 #ansible user - remove first 
-remove-localuser -Name ansible
+remove-localuser -Name $ansibleUserName
 try {
   $password = Read-Host -AsSecureString -Prompt "ansible user password:"
   New-localuser -Name $ansibleUserName -Password $password -ErrorAction Stop
@@ -73,7 +73,7 @@ if (cmd /c $mycommand) {
   "Created winrm HTTPS listener" | Out-File $logFile -Append
 }
 Else {
-  "Error creating HTTPS listener. HINT is winrm accessible to local admins? The computer rename script might help"" | Out-File $logFile -Append
+  "Error creating HTTPS listener. HINT is winrm accessible to local admins? The computer rename script might help" | Out-File $logFile -Append
   Write-Host "ERROR: see "$logFile" for details"
 }
 
