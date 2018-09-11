@@ -1,4 +1,4 @@
-# Simple script to configure winrm with self-signed HTTPS certificate.
+# Script to configure winrm with self-signed HTTPS certificate.
 # Useful for configuring windows with ansible.
 # May not work on a partially configured machine. USE WITH CAUTION.
 #
@@ -20,8 +20,13 @@
 # windows Build version the script was written for
 $desiredBuild = 14393
 
-# other vars
+# other vars and FQDN check
 $logFile = 'C:\log\winrmscript.log'
+$ansibleUserName = 'ansible'
+$fqdn=[System.Net.Dns]::GetHostByName($env:computerName).HostName
+Write-Host "My FQDN appears to be "$fqdn" Press ENTER to continue with this FQDN"
+Write-Host "There is a rename computer script around here somewhere ;)"
+Read-Host
 
 #check windows version
 $detectedBuild = [System.Environment]::OSVersion.Version.Build
@@ -43,36 +48,33 @@ if (Test-Path $logFile) {
 	Exit
 } Else {
 	Write-Host "no logfile found, continuing"
+	New-Item $logFile -Itemtype file -Force
 }
-
-#enable local administrator to configure winrm (otherwise access denied!):
-try {
-  reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v LocalAccountTokenFilterPolicy /t REG_DWORD /d 1 /f -ErrorAction Stop
-  "Added reg key to enable local admins to configure winrm" | Out-File $logFile -Append
-}
-catch {
-  "ERROR failed to add reg key to HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" | Out-File $logFile -Append
-}
-
-# rename and set fqdn
-Rename-Computer -NewName $newComputerName
-Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters -Name "NV Domain" -Value $newNVDomain
-Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters -Name SyncDomainWithMembership -Value 0
-Read-Host -Prompt "Press Enter to reboot or ctrl-C to return to the shell"
-Restart-Computer
 
 #ansible user - remove first 
 remove-localuser -Name ansible
-$password = Read-Host -AsSecureString
-New-localuser -Name ansible -Password $password
-Add-LocalGroupMember -Group Administrators -Member ansible
+try {
+  $password = Read-Host -AsSecureString -Prompt "ansible user password:"
+  New-localuser -Name $ansibleUserName -Password $password -ErrorAction Stop
+  "Added ansible user" | Out-File $logFile -Append
+  Add-LocalGroupMember -Group Administrators -Member ansible -ErrorAction Stop
+  "Added ansible user to Administrators group" | Out-File $logFile -Append
+}
+Catch {
+  "Error adding ansible user" | Out-File $logFile -Append
+}
 
 # remove HTTP listener and create an HTTPS one
 Get-ChildItem -Path WSMan:\localhost\Listener | Where-Object { $_.Keys -contains "Transport=HTTP" } | Remove-Item -Recurse -Force
-$fqdn=[System.Net.Dns]::GetHostByName($env:computerName).HostName
 $certificateforwinrm=New-SelfSignedCertificate -DnsName $fqdn -CertStoreLocation Cert:\LocalMachine\My
 $mycommand = 'winrm create winrm/config/Listener?Address=*+Transport=HTTPS @{Hostname="'+$fqdn+'"; CertificateThumbprint="'+$certificateforwinrm.Thumbprint+'"}'
-cmd /c $mycommand
+if (cmd /c $mycommand) {
+  "Created winrm HTTPS listener" | Out-File $logFile -Append
+}
+Else {
+  "Error creating HTTPS listener. HINT is winrm accessible to local admins? The computer rename script might help"" | Out-File $logFile -Append
+  Write-Host "ERROR: see "$logFile" for details"
+}
 
 # private network profile
 set-netconnectionprofile -InterfaceAlias Ethernet -NetworkCategory Private
