@@ -37,7 +37,7 @@ if ($detectedBuild -ne $desiredBuild) {
 
 #Check if we've been here before
 if (Test-Path $logFile) {
-	write-host "Found a breadcrumb File at "$logFile" - cowardly refusing to run script twice."
+	write-host "Found a log File at "$logFile" - cowardly refusing to run script twice."
 	write-host "Delete "$logFile" if you want to try again"
 	Read-Host -Prompt "Press Enter to exit or ctrl-C to return to the shell"
 	Exit
