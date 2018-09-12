@@ -79,6 +79,7 @@ Catch {
 
 # remove HTTP listener and create an HTTPS one
 Get-ChildItem -Path WSMan:\localhost\Listener | Where-Object { $_.Keys -contains "Transport=HTTP" } | Remove-Item -Recurse -Force
+Remove-NetFirewallRule -DisplayName "Windows Remote Management (HTTP-In)"
 $certificateforwinrm=New-SelfSignedCertificate -DnsName $fqdn -CertStoreLocation Cert:\LocalMachine\My
 $mycommand = 'winrm create winrm/config/Listener?Address=*+Transport=HTTPS @{Hostname="'+$fqdn+'"; CertificateThumbprint="'+$certificateforwinrm.Thumbprint+'"}'
 if (cmd /c $mycommand) {
