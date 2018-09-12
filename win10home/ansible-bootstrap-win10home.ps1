@@ -17,6 +17,9 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 #
+
+$ErrorActionPreference = "Stop"
+
 #check windows version
 $desiredbuild = 17134
 $detectedbuild = [System.Environment]::OSVersion.Version.Build
