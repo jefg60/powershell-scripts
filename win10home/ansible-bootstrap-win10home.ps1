@@ -21,6 +21,11 @@
 
 $ErrorActionPreference = "Stop"
 
+function datestring {
+  param($Message)
+  (Get-Date).ToString("yyyy/M/dd hh:mm:ss")
+}
+
 #Vars
 $logFile = 'C:\log\winrmscript.log'
 $ansibleUserName = 'ansible'
@@ -56,7 +61,7 @@ if (Test-Path $logFile) {
 #Check that we can adminster winrm (permissions may be wrong)
 try {
   winrm enumerate winrm/config/Listener
-  "I can enumerate winrm OK" | Out-File $logFile -Append
+  datestring -Message "I can enumerate winrm OK" | Out-File $logFile -Append
 }
 Catch {
   Read-Host -Prompt "Error: Can't enumerate winrm properly. check the rename script for clues"
@@ -68,12 +73,12 @@ remove-localuser -Name $ansibleUserName -ErrorAction SilentlyContinue
 try {
   $password = Read-Host -AsSecureString -Prompt "ansible user password:"
   New-localuser -Name $ansibleUserName -Password $password -ErrorAction Stop
-  "Added ansible user" | Out-File $logFile -Append
+  datestring -Message "Added ansible user" | Out-File $logFile -Append
   Add-LocalGroupMember -Group Administrators -Member ansible -ErrorAction Stop
-  "Added ansible user to Administrators group" | Out-File $logFile -Append
+  datestring -Message "Added ansible user to Administrators group" | Out-File $logFile -Append
 }
 Catch {
-  "Error adding ansible user" | Out-File $logFile -Append
+  datestring -Message "Error adding ansible user" | Out-File $logFile -Append
 }
 
 # do initial winrm quickconfig (HTTP only)
@@ -84,10 +89,10 @@ Get-ChildItem -Path WSMan:\localhost\Listener | Where-Object { $_.Keys -contains
 $certificateforwinrm=New-SelfSignedCertificate -DnsName $fqdn -CertStoreLocation Cert:\LocalMachine\My
 $mycommand = 'winrm create winrm/config/Listener?Address=*+Transport=HTTPS @{Hostname="'+$fqdn+'"; CertificateThumbprint="'+$certificateforwinrm.Thumbprint+'"}'
 if (cmd /c $mycommand) {
-  "Created winrm HTTPS listener" | Out-File $logFile -Append
+  datestring -Message "Created winrm HTTPS listener" | Out-File $logFile -Append
 }
 Else {
-  "Error creating HTTPS listener. HINT is winrm accessible to local admins? The computer rename script might help" | Out-File $logFile -Append
+  datestring -Message "Error creating HTTPS listener. HINT is winrm accessible to local admins? The computer rename script might help" | Out-File $logFile -Append
   Write-Host "ERROR: see "$logFile" for details"
 }
 
