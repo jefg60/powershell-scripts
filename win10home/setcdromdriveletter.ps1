@@ -27,9 +27,30 @@ if ($newCdLetter.length -ne 1 ) {
         exit
 }
 Else {
-	$newcdletter=$newcdletter+":"
+	$newCdLetter=$newCdLetter+":"
 }
 
+# Get the cd drive object (works for DVDROM as well)
 $cdDrive = Get-WMIObject -Class Win32_CDROMDrive
+
+# Check if we have anything to do
+if ( $cdDrive.Drive -eq $newCdLetter ){
+	return "Drive letter " + $cdDrive.Drive + " is ALREADY " + $newCdLetter
+	exit
+}
+
+# format the filter string correctly
 $filter = "DriveLetter = '" + $cdDrive.Drive.Substring(0,1) + ":'"
+
+# change the drive letter
 Get-WmiObject -Class Win32_volume -Filter $filter |Set-WmiInstance -Arguments @{DriveLetter=$newCdLetter}
+
+# Get the cd drive object as it is now into a new var
+$resultingCDDrive = Get-WMIObject -Class Win32_CDROMDrive
+
+# Test result and return accordingly
+if ( $resultingCDDrive.Drive -eq $newCdLetter ){
+	return "Drive letter " + $cdDrive.Drive + " has been changed to " + $resultingCDDrive.Drive
+} Else {
+	return "ERROR: tried to change " + $cdDrive.Drive + " to " + $newCdLetter + " but something went wrong because it is now " + $resultingCDDrive.Drive
+}
