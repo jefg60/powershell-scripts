@@ -35,7 +35,7 @@ Write-Host "There is a rename computer script around here somewhere ;)"
 Read-Host
 
 #check windows version
-$desiredbuild = 17134
+$desiredbuild = 17763
 $detectedbuild = [System.Environment]::OSVersion.Version.Build
 if ($detectedbuild -ne $desiredbuild) {
         write-host "This script is for windows build "$desiredbuild
