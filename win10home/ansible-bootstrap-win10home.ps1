@@ -37,8 +37,8 @@ Read-Host
 #check windows version
 $desiredbuild = 17134
 $detectedbuild = [System.Environment]::OSVersion.Version.Build
-if ($detectedbuild -ne $desiredbuild) {
-        write-host "This script is for windows build "$desiredbuild
+if ( -Not $detectedbuild -ge $desiredbuild) {
+        write-host "This script is for windows build "$desiredbuild" or higher"
         write-host "It appears to be running on build "$detectedbuild
         write-host "Please try a different script"
         Read-Host -Prompt "Press Enter to exit or ctrl-C to return to the shell"
