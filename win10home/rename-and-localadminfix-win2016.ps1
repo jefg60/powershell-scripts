@@ -17,12 +17,12 @@
 
 # Get vars from script args
 Param(
-    [Parameter(Mandatory=$true)][string]$newComputerName,
-    [Parameter(Mandatory=$true)][string]$newNVDomain,
-    [Switch]$y
+	[Parameter(Mandatory=$true)][string] $newComputerName,
+	[Parameter(Mandatory=$true)][string] $newNVDomain,
+	[Switch] $y = $false
 )
 
-if ( $y -eq $null ){
+if ( $y -eq $false ){
 	write-host "rename this computer to "$newComputerName"."$newNVDomain"?" 
 	read-host -Prompt "Press Enter to continue or CTRL-C to exit"
 }
@@ -36,5 +36,7 @@ Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters 
 reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v LocalAccountTokenFilterPolicy /t REG_DWORD /d 1 /f
 
 # reboot
-Read-Host -Prompt "Press Enter to reboot or ctrl-C to return to the shell"
+if ( $y -eq $false ){
+	Read-Host -Prompt "Press Enter to reboot or ctrl-C to return to the shell"
+}
 Restart-Computer
