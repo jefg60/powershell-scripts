@@ -20,15 +20,15 @@
 #
 Param(
 	[string] $ansibleUserName = 'ansible',
-	[string] $ansiblePassword = 'ansible',
+	[string] $ansiblePassword = $ansibleUserName,
 	[Switch] $y = $false,
 	[Switch] $debug = $false
 )
 
 if ( $debug ) {
 	write-host "vars:"
-	write-host "ansible username "$ansibleUserName
-	write-host "ansible password "$ansiblePasword
+	write-host "ansibleUsername "$ansibleUserName
+	write-host "ansiblePassword "$ansiblePassword
 	write-host "y "$y
 }
 
