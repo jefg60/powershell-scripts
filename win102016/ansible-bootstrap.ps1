@@ -19,19 +19,9 @@
 #
 #
 Param(
-	[string] $ansibleUserName = 'ansible',
-	[string] $ansiblePassword = 'insecurepassword',
 	[Switch] $y = $false,
 	[Switch] $debug = $false
 )
-
-if ( $ansiblePassword -eq 'insecurepassword' ) {
-	$encryptedAnsiblePassword = Read-Host -AsSecureString -Prompt "ansible user password"
-}
-else {
-	$encryptedAnsiblePassword = ConvertTo-SecureString -String $ansiblePassword -AsPlainText -Force
-}
-$ansiblePassword = $null
 
 $ErrorActionPreference = "Stop"
 
@@ -68,18 +58,6 @@ if (Test-Path $logFile) {
 } Else {
 	Write-Host "no logfile found, creating it"
 	New-Item $logFile -Itemtype file -Force
-}
-
-#ansible user - remove first (silently continue if not there)
-remove-localuser -Name $ansibleUserName -ErrorAction SilentlyContinue
-try {
-	New-localuser -Name $ansibleUserName -Password $encryptedAnsiblePassword -ErrorAction Stop
-	datestring -Message "Added ansible user" | Out-File $logFile -Encoding ascii -Append
-	Add-LocalGroupMember -Group Administrators -Member $ansibleUserName -ErrorAction Stop
-	datestring -Message "Added ansible user to Administrators group" | Out-File $logFile -Encoding ascii -Append
-}
-Catch {
-	datestring -Message "Error adding ansible user" | Out-File $logFile -Encoding ascii -Append
 }
 
 #Check that we can adminster winrm (permissions may be wrong)
