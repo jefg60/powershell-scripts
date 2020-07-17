@@ -16,13 +16,13 @@
 #
 
 # Get vars from script args
-Param (
+Param(
     [Parameter(Mandatory=$true)][string]$newComputerName
     [Parameter(Mandatory=$true)][string]$newNVDomain
     [Switch]$y
 )
 
-if ( $y -eq False ){
+if ( $y -eq $null ){
 	write-host "rename this computer to "$newComputerName"."$newNVDomain"?" 
 	read-host -Prompt "Press Enter to continue or CTRL-C to exit"
 }
