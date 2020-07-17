@@ -20,7 +20,7 @@
 #
 Param(
 	[string] $ansibleUserName = 'ansible',
-	[string] $ansiblePassword = $ansibleUserName,
+	[string] $ansiblePassword = 'insecurepassword',
 	[Switch] $y = $false,
 	[Switch] $debug = $false
 )
@@ -82,8 +82,8 @@ Catch {
 #ansible user - remove first (silently continue if not there)
 remove-localuser -Name $ansibleUserName -ErrorAction SilentlyContinue
 try {
-	if ( $ansiblePassword = $ansibleUserName ) {
-		$ansiblePassword = Read-Host -AsSecureString -Prompt "ansible user password:"
+	if ( $ansiblePassword -eq 'insecurepassword' ) {
+		$ansiblePassword = Read-Host -AsSecureString -Prompt "ansible user password"
 	}
 	else {
 		$ansiblePassword = $ansiblePassword | ConvertTo-SecureString -AsPlainText -Force
