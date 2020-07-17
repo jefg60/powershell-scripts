@@ -20,7 +20,7 @@
 #
 Param(
 	[string] $ansibleUserName = 'ansible',
-	[string] $ansiblePassword = $ansibleUserName,
+	[string] $ansiblePassword = 'ansible',
 	[Switch] $y = $false,
 	[Switch] $debug = $false
 )
