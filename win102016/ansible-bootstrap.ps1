@@ -70,16 +70,6 @@ if (Test-Path $logFile) {
 	New-Item $logFile -Itemtype file -Force
 }
 
-#Check that we can adminster winrm (permissions may be wrong)
-try {
-	winrm enumerate winrm/config/Listener
-	datestring -Message "I can enumerate winrm OK" | Out-File $logFile -Encoding ascii -Append
-}
-Catch {
-	Read-Host -Prompt "Error: Can't enumerate winrm properly. check the rename script for clues"
-	Exit
-}
-
 #ansible user - remove first (silently continue if not there)
 remove-localuser -Name $ansibleUserName -ErrorAction SilentlyContinue
 try {
@@ -90,6 +80,16 @@ try {
 }
 Catch {
 	datestring -Message "Error adding ansible user" | Out-File $logFile -Encoding ascii -Append
+}
+
+#Check that we can adminster winrm (permissions may be wrong)
+try {
+	winrm enumerate winrm/config/Listener
+	datestring -Message "I can enumerate winrm OK" | Out-File $logFile -Encoding ascii -Append
+}
+Catch {
+	Read-Host -Prompt "Error: Can't enumerate winrm properly. check the rename script for clues"
+	Exit
 }
 
 # do initial winrm quickconfig (HTTP only)
