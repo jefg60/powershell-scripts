@@ -20,7 +20,7 @@
 #
 Param(
 	[string] $ansibleUserName = 'ansible',
-	[string] $ansiblepassword,
+	[string] $ansiblePassword = $null,
 	[Switch] $y = $false
 )
 
@@ -34,7 +34,7 @@ function datestring {
 #Vars
 $logFile = 'C:\log\winrmscript.log'
 $fqdn=[System.Net.Dns]::GetHostByName($env:computerName).HostName
-if ( $y = $false ) {
+if ( -Not $y ) {
 	Write-Host "My FQDN appears to be "$fqdn" Press ENTER to continue with this FQDN"
 	Write-Host "There is a rename computer script around here somewhere ;)"
 	Read-Host
@@ -74,11 +74,11 @@ Catch {
 #ansible user - remove first (silently continue if not there)
 remove-localuser -Name $ansibleUserName -ErrorAction SilentlyContinue
 try {
-	if ( $ansiblepassword = $null ) {
-		$ansiblepassword = Read-Host -AsSecureString -Prompt "ansible user password:"
+	if ( $ansiblePassword = $null ) {
+		$ansiblePassword = Read-Host -AsSecureString -Prompt "ansible user password:"
 	}
 	else {
-		$ansiblepassword = $ansiblepassword | ConvertTo-SecureString -AsPlainText -Force
+		$ansiblePassword = $ansiblePassword | ConvertTo-SecureString -AsPlainText -Force
 	}
 	New-localuser -Name $ansibleUserName -Password $password -ErrorAction Stop
 	datestring -Message "Added ansible user" | Out-File $logFile -Encoding ascii -Append
