@@ -16,14 +16,13 @@
 #
 
 # Get vars from script args
-$newComputerName = $args[0]
-$newNVDomain = $args[1]
+Param (
+    [Parameter(Mandatory=$true)][string]$newComputerName
+    [Parameter(Mandatory=$true)][string]$newNVDomain
+    [Switch]$y
+)
 
-if ( ($newComputerName -eq $null) -or ($newNVDomain -eq $null) ){
-	write-host "Syntax: "$PSCommandPath" <new computer name> <new primary dns suffix>"
-	exit
-}
-Else {
+if ( $y -eq False ){
 	write-host "rename this computer to "$newComputerName"."$newNVDomain"?" 
 	read-host -Prompt "Press Enter to continue or CTRL-C to exit"
 }
