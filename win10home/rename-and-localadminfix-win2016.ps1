@@ -17,8 +17,8 @@
 
 # Get vars from script args
 Param(
-    [Parameter(Mandatory=$true)][string]$newComputerName
-    [Parameter(Mandatory=$true)][string]$newNVDomain
+    [Parameter(Mandatory=$true)][string]$newComputerName,
+    [Parameter(Mandatory=$true)][string]$newNVDomain,
     [Switch]$y
 )
 
