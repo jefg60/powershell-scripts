@@ -21,8 +21,16 @@
 Param(
 	[string] $ansibleUserName = 'ansible',
 	[string] $ansiblePassword = $ansibleUserName,
-	[Switch] $y = $false
+	[Switch] $y = $false,
+	[Switch] $debug = $false
 )
+
+if ( $debug ) {
+	write-host "vars:"
+	write-host "ansible username "$ansibleUserName
+	write-host "ansible password "$ansiblePasword
+	write-host "y "$y
+}
 
 $ErrorActionPreference = "Stop"
 
