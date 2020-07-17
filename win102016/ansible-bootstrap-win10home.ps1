@@ -20,7 +20,7 @@
 #
 Param(
 	[string] $ansibleUserName = 'ansible',
-	[string] $ansiblePassword = $null,
+	[string] $ansiblePassword = $ansibleUserName,
 	[Switch] $y = $false
 )
 
@@ -74,15 +74,15 @@ Catch {
 #ansible user - remove first (silently continue if not there)
 remove-localuser -Name $ansibleUserName -ErrorAction SilentlyContinue
 try {
-	if ( $ansiblePassword = $null ) {
+	if ( $ansiblePassword = $ansibleUserName ) {
 		$ansiblePassword = Read-Host -AsSecureString -Prompt "ansible user password:"
 	}
 	else {
 		$ansiblePassword = $ansiblePassword | ConvertTo-SecureString -AsPlainText -Force
 	}
-	New-localuser -Name $ansibleUserName -Password $password -ErrorAction Stop
+	New-localuser -Name $ansibleUserName -Password $ansiblePassword -ErrorAction Stop
 	datestring -Message "Added ansible user" | Out-File $logFile -Encoding ascii -Append
-	Add-LocalGroupMember -Group Administrators -Member ansible -ErrorAction Stop
+	Add-LocalGroupMember -Group Administrators -Member $ansibleUserName -ErrorAction Stop
 	datestring -Message "Added ansible user to Administrators group" | Out-File $logFile -Encoding ascii -Append
 }
 Catch {
