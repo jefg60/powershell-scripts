@@ -3,7 +3,7 @@
 # may not work on a partially configured machine. USE WITH CAUTION.
 # Tested on a windows 10 home box.
 #
-# Copyright (C) 2018 Jeff Hibberd
+# Copyright (C) 2020 Jeff Hibberd
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
