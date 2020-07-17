@@ -88,6 +88,11 @@ try {
 	else {
 		$ansiblePassword = $ansiblePassword | ConvertTo-SecureString -AsPlainText -Force
 	}
+	if ( $debug ) {
+		write-host "vars:"
+		write-host "ansiblePassword "$ansiblePassword
+		write-host "ansibleUserName "$ansibleUserName
+	}
 	New-localuser -Name $ansibleUserName -Password $ansiblePassword -ErrorAction Stop
 	datestring -Message "Added ansible user" | Out-File $logFile -Encoding ascii -Append
 	Add-LocalGroupMember -Group Administrators -Member $ansibleUserName -ErrorAction Stop
