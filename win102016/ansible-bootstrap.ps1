@@ -91,5 +91,5 @@ Remove-NetFirewallRule -DisplayName "Windows Remote Management (HTTP-In)"
 # allow TCP port 5986 thru firewall.
 set-netconnectionprofile -InterfaceAlias Ethernet -NetworkCategory Private
 New-NetFirewallRule -DisplayName 'WinRM HTTPS' -Profile @('Domain', 'Private') -Direction Inbound -Action Allow -Protocol TCP -LocalPort @('5986')
-
+Set-NetConnectionProfile -Name Network -NetworkCategory Private
 Set-ExecutionPolicy -ExecutionPolicy Restricted -Force
