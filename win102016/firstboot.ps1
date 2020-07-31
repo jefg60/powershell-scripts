@@ -5,4 +5,4 @@ $User= "NT AUTHORITY\SYSTEM"
 $Action= New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "-File C:\scripts\secondboot.ps1"
 Register-ScheduledTask -TaskName "secondboot" -Trigger $Trigger -User $User -Action $Action -RunLevel Highest -Force
 Unregister-ScheduledTask -TaskName "firstboot" -Confirm:$false
-c:\scripts\rename.ps1 -newComputerName $env:computername -newNVDomain dev -y
+c:\scripts\rename-and-localadminfix-win2016.ps1 -newComputerName $env:computername -newNVDomain dev -y
