@@ -1,6 +1,6 @@
 # Simple script to rename computer and set a primary dns suffix
 #
-# Copyright (C) 2018 Jeff Hibberd
+# Copyright (C) 2020 Jeff Hibberd
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -16,14 +16,13 @@
 #
 
 # Get vars from script args
-$newComputerName = $args[0]
-$newNVDomain = $args[1]
+Param(
+	[Parameter(Mandatory=$true)][string] $newComputerName,
+	[Parameter(Mandatory=$true)][string] $newNVDomain,
+	[Switch] $y = $false
+)
 
-if ( ($newComputerName -eq $null) -or ($newNVDomain -eq $null) ){
-	write-host "Syntax: "$PSCommandPath" <new computer name> <new primary dns suffix>"
-	exit
-}
-Else {
+if ( $y -eq $false ){
 	write-host "rename this computer to "$newComputerName"."$newNVDomain"?" 
 	read-host -Prompt "Press Enter to continue or CTRL-C to exit"
 }
@@ -37,5 +36,7 @@ Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters 
 reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v LocalAccountTokenFilterPolicy /t REG_DWORD /d 1 /f
 
 # reboot
-Read-Host -Prompt "Press Enter to reboot or ctrl-C to return to the shell"
-Restart-Computer
+if ( $y -eq $false ){
+	Read-Host -Prompt "Press Enter to reboot or ctrl-C to return to the shell"
+}
+Restart-Computer -Confirm:$false -Force
