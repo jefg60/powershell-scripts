@@ -1,7 +1,7 @@
 # script to set up a firstboot script as scheduled task
 param (
   [string]$branch = 'master',
-  [string]$domain='dev'
+  [string]$domain = 'dev'
 )
 mkdir c:\temp
 invoke-webrequest -uri "https://github.com/jefg60/powershell-scripts/archive/$branch.zip" -outfile "c:\temp\powershell-scripts.zip"
