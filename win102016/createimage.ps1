@@ -8,3 +8,4 @@ $Trigger= New-ScheduledTaskTrigger -AtStartup -RandomDelay $TimeSpan
 $User= "NT AUTHORITY\SYSTEM"
 $Action= New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "-File C:\temp\powershell-scripts-$branch\win102016\firstboot.ps1 -branch $branch"
 Register-ScheduledTask -TaskName "firstboot" -Trigger $Trigger -User $User -Action $Action -RunLevel Highest -Force
+%WINDIR%\system32\sysprep\sysprep.exe /generalize /shutdown /oobe
