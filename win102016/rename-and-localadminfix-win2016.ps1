@@ -39,4 +39,4 @@ reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v LocalA
 if ( $y -eq $false ){
 	Read-Host -Prompt "Press Enter to reboot or ctrl-C to return to the shell"
 }
-Restart-Computer
+Restart-Computer -Confirm:$false -Force
