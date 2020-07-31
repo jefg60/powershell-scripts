@@ -1,5 +1,8 @@
 # Firstboot - run ansible rename script (prep for winrm, which is set up after a reboot)
-param ($branch='master', $domain='dev')
+param (
+  $branch='master',
+  $domain='dev'
+)
 $TimeSpan= New-TimeSpan -Minutes 5
 $Trigger= New-ScheduledTaskTrigger -AtStartup -RandomDelay $TimeSpan
 $User= "NT AUTHORITY\SYSTEM"
