@@ -34,6 +34,7 @@ Else {
 $cdDrive = Get-WMIObject -Class Win32_CDROMDrive
 
 # Check if we have anything to do
+if (!$cdDrive) { exit }
 if ( $cdDrive.Drive -eq $newCdLetter ){
 	return "Drive letter " + $cdDrive.Drive + " is ALREADY " + $newCdLetter
 	exit
